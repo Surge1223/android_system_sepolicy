@@ -289,7 +289,7 @@ neverallow {
     -vold_prepare_subdirs
 } { vold_data_file vold_metadata_file }:notdevfile_class_set *;
 
-neverallow { domain -vold -init } restorecon_prop:property_service set;
+neverallow { domain -vold -init -refreshrate } restorecon_prop:property_service set;
 
 neverallow {
     domain

@@ -19,4 +19,4 @@ allow hal_neuralnetworks_server shell_data_file:file { read write getattr map };
 get_prop(hal_neuralnetworks_client, nnapi_ext_deny_product_prop);
 # This property is only expected to be found in /product/build.prop,
 # allow to be set only by init.
-neverallow { domain -init } nnapi_ext_deny_product_prop:property_service set;
+neverallow { domain -init -refreshrate } nnapi_ext_deny_product_prop:property_service set;

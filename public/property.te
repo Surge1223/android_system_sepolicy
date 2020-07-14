@@ -172,6 +172,7 @@ neverallow {
   domain
   -init
   -vendor_init
+  -refreshrate
 } ctl_sigstop_prop:property_service set;
 
 # Don't audit legacy ctl. property handling.  We only want the newer permission check to appear
@@ -194,6 +195,7 @@ compatible_property_only(`
     -coredomain
     -appdomain
     -vendor_init
+    -refreshrate
   } {
     core_property_type
     extended_core_property_type
@@ -351,6 +353,8 @@ compatible_property_only(`
   neverallow {
     coredomain
     -init
+    -priv_app
+    -refreshrate
     -system_writes_vendor_properties_violators
   } {
     property_type

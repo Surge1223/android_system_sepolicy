@@ -49,6 +49,7 @@ neverallow {
   -bootstat
   -init
   -system_server
+  -refreshrate
 } { bootloader_boot_reason_prop last_boot_reason_prop }:property_service set;
 # ... and refine ... for a ro propertly no less ... keep this _tight_
 neverallow system_server bootloader_boot_reason_prop:property_service set;
@@ -57,4 +58,5 @@ neverallow {
   domain
   -bootstat
   -init
+  -refreshrate
 } system_boot_reason_prop:property_service set;

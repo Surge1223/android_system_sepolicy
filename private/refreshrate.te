@@ -1,0 +1,98 @@
+#
+# Refreshrate needs additional permissions
+#
+#
+
+typeattribute refreshrate coredomain;
+app_domain(refreshrate)
+
+# Access the network.
+net_domain(refreshrate)
+# Access bluetooth.
+bluetooth_domain(refreshrate)
+
+# Allow loading executable code from writable priv-app home
+# directories. This is a W^X violation, however, it needs
+# to be supported for now for the following reasons.
+# * /data/user_*/0/*/code_cache/* POSSIBLE uses (b/117841367)
+#   1) com.android.opengl.shaders_cache
+#   2) com.android.skia.shaders_cache
+#   3) com.android.renderscript.cache
+# * /data/user_de/0/com.google.android.gms/app_chimera
+# TODO: Tighten (b/112357170)
+allow refreshrate privapp_data_file:file execute;
+
+allow refreshrate privapp_data_file:lnk_file create_file_perms;
+
+# Priv apps can find services that expose both @SystemAPI and normal APIs.
+allow refreshrate app_api_service:service_manager find;
+allow refreshrate system_api_service:service_manager find;
+
+allow refreshrate audioserver_service:service_manager find;
+allow refreshrate cameraserver_service:service_manager find;
+allow refreshrate drmserver_service:service_manager find;
+allow refreshrate mediacodec_service:service_manager find;
+allow refreshrate mediadrmserver_service:service_manager find;
+allow refreshrate mediaextractor_service:service_manager find;
+allow refreshrate mediametrics_service:service_manager find;
+allow refreshrate mediaserver_service:service_manager find;
+allow refreshrate nfc_service:service_manager find;
+allow refreshrate oem_lock_service:service_manager find;
+allow refreshrate persistent_data_block_service:service_manager find;
+allow refreshrate radio_service:service_manager find;
+allow refreshrate recovery_service:service_manager find;
+
+# Allow privileged apps to interact with gpuservice
+binder_call(refreshrate, gpuservice)
+allow refreshrate gpu_service:service_manager find;
+
+# Access to /data/media.
+allow refreshrate media_rw_data_file:dir create_dir_perms;
+allow refreshrate media_rw_data_file:file create_file_perms;
+
+# /proc access
+allow refreshrate {
+  proc_vmstat
+}:file r_file_perms;
+
+allow refreshrate sysfs_type:dir search;
+# Read access to /sys/class/net/wlan*/address
+r_dir_file(refreshrate, sysfs_net)
+# Read access to /sys/block/zram*/mm_stat
+r_dir_file(refreshrate, sysfs_zram)
+
+# Allow refreshrates to check whether Dynamic System Update is enabled
+get_prop(refreshrate, dynamic_system_prop)
+get_prop(refreshrate, vendor_default_prop)
+allow refreshrate sysfs:dir r_dir_perms;
+allow refreshrate sysfs_loop:file r_file_perms;
+
+# suppress denials for non-API accesses.
+dontaudit refreshrate exec_type:file getattr;
+dontaudit refreshrate device:dir read;
+dontaudit refreshrate fs_bpf:dir search;
+dontaudit refreshrate net_dns_prop:file read;
+dontaudit refreshrate proc:file read;
+dontaudit refreshrate proc_interrupts:file read;
+dontaudit refreshrate proc_modules:file read;
+dontaudit refreshrate proc_stat:file read;
+dontaudit refreshrate proc_version:file read;
+dontaudit refreshrate sysfs:dir read;
+dontaudit refreshrate sysfs:file read;
+dontaudit refreshrate sysfs_android_usb:file read;
+dontaudit refreshrate wifi_prop:file read;
+dontaudit refreshrate { wifi_prop exported_wifi_prop }:file read;
+
+# allow privileged apps to use UDP sockets provided by the system server but not
+# modify them other than to connect
+allow refreshrate system_server:udp_socket {
+        connect getattr read recvfrom sendto write getopt setopt };
+
+###
+### neverallow rules
+###
+
+# Modify props
+allow refreshrate property_socket:sock_file w_file_perms;
+allow refreshrate init:unix_stream_socket connectto;
+allow refreshrate property_type:property_service set;

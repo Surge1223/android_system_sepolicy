@@ -959,6 +959,7 @@ neverallow {
   -init
   -system_server
   -flags_health_check
+  -refreshrate
 } {
   device_config_activity_manager_native_boot_prop
   device_config_input_native_boot_prop

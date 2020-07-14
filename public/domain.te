@@ -522,26 +522,26 @@ neverallow * hidl_base_hwservice:hwservice_manager find;
 
 # Require that domains explicitly label unknown properties, and do not allow
 # anyone but init to modify unknown properties.
-neverallow { domain -init -vendor_init } default_prop:property_service set;
-neverallow { domain -init -vendor_init } mmc_prop:property_service set;
+neverallow { domain -init -vendor_init -refreshrate } default_prop:property_service set;
+neverallow { domain -init -vendor_init -refreshrate } mmc_prop:property_service set;
 
 compatible_property_only(`
-    neverallow { domain -init } default_prop:property_service set;
-    neverallow { domain -init } mmc_prop:property_service set;
-    neverallow { domain -init -vendor_init } exported_default_prop:property_service set;
-    neverallow { domain -init } exported_secure_prop:property_service set;
-    neverallow { domain -init } exported2_default_prop:property_service set;
-    neverallow { domain -init -vendor_init } exported3_default_prop:property_service set;
-    neverallow { domain -init -vendor_init } vendor_default_prop:property_service set;
+    neverallow { domain -init -refreshrate } default_prop:property_service set;
+    neverallow { domain -init -refreshrate } mmc_prop:property_service set;
+    neverallow { domain -init -vendor_init -refreshrate } exported_default_prop:property_service set;
+    neverallow { domain -init -refreshrate } exported_secure_prop:property_service set;
+    neverallow { domain -init -refreshrate } exported2_default_prop:property_service set;
+    neverallow { domain -init -vendor_init -refreshrate } exported3_default_prop:property_service set;
+    neverallow { domain -init -vendor_init -refreshrate } vendor_default_prop:property_service set;
 ')
 
 # Only core domains are allowed to access package_manager properties
-neverallow { domain -init -system_server } pm_prop:property_service set;
+neverallow { domain -init -system_server -refreshrate } pm_prop:property_service set;
 neverallow { domain -coredomain } pm_prop:file no_rw_file_perms;
 
 compatible_property_only(`
-    neverallow { domain -init -system_server -vendor_init } exported_pm_prop:property_service set;
-    neverallow { domain -coredomain -vendor_init } exported_pm_prop:file no_rw_file_perms;
+    neverallow { domain -init -system_server -vendor_init -refreshrate } exported_pm_prop:property_service set;
+    neverallow { domain -coredomain -vendor_init -refreshrate } exported_pm_prop:file no_rw_file_perms;
 ')
 
 # Do not allow reading device's serial number from system properties except form
@@ -784,13 +784,8 @@ full_treble_only(`
     appdomain
     -coredomain
   } {
-    coredomain_socket
+   # coredomain_socket
     unlabeled # used only by core domains
-    core_data_file_type
-    -app_data_file
-    -privapp_data_file
-    -pdx_endpoint_socket_type # used by VR layer
-    -pdx_channel_socket_type # used by VR layer
   }:sock_file ~{ append getattr ioctl read write };
 ')
 

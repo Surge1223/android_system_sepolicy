@@ -114,6 +114,7 @@
     rollback_service
     rs
     rs_exec
+    refreshrate
     rss_hwm_reset
     rss_hwm_reset_exec
     runas_app

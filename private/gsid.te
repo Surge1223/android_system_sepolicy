@@ -56,7 +56,7 @@ allow gsid adbd:fd use;
 # Needed when running gsi_tool through "su root" rather than adb root.
 allow gsid adbd:unix_stream_socket rw_socket_perms;
 
-neverallow { domain -gsid -init } gsid_prop:property_service set;
+neverallow { domain -gsid -init -refreshrate } gsid_prop:property_service set;
 
 # gsid needs to store images on /data, but cannot use file I/O. If it did, the
 # underlying blocks would be encrypted, and we couldn't mount the GSI image in
